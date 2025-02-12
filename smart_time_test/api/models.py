@@ -9,7 +9,7 @@ from django.db.models import (
 
 
 class Room(Model):
-    rum_number = IntegerField()
+    room_number = IntegerField()
 
     class Meta:
         db_table = "rooms"
@@ -23,8 +23,15 @@ class User(Model):
         db_table = "users"
 
 
-class Exam(Model):
+class Subject(Model):
     subject_name = TextField()
+
+    class Meta:
+        db_table = "subjects"
+
+
+class Exam(Model):
+    subject_id = ForeignKey(Subject, on_delete=CASCADE)
     room_id = ForeignKey(Room, on_delete=CASCADE)
 
     class Meta:
@@ -32,7 +39,7 @@ class Exam(Model):
 
 
 class ExamRegistration(Model):
-    exam = ForeignKey(Room, on_delete=CASCADE)
+    exam = ForeignKey(Exam, on_delete=CASCADE)
     user = ForeignKey(User, on_delete=CASCADE)
 
     class Meta:
