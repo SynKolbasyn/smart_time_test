@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from json import dumps
 
 from django.test import Client, TestCase
 from parameterized import parameterized
@@ -11,6 +12,55 @@ users = [
     (2, "student.2@edu.hse.ru", "9876"),
     (3, "student.3@edu.hse.ru", "password"),
 ]
+
+
+class RegisterTests(TestCase):
+    def setUp(self):
+        User.objects.create(email="student.1@edu.hse.ru", password="12345678")
+
+    @parameterized.expand(
+        [
+            (
+                "student.1@edu.hse.ru",
+                "1234",
+                HTTPStatus.BAD_REQUEST,
+                "error",
+                "Request data isn't valid",
+            ),
+            (
+                "student.1",
+                "12345678",
+                HTTPStatus.BAD_REQUEST,
+                "error",
+                "Request data isn't valid",
+            ),
+            (
+                "student.1@edu.hse.ru",
+                "12345678",
+                HTTPStatus.BAD_REQUEST,
+                "error",
+                "User already registered",
+            ),
+            (
+                "student.2@edu.hse.ru",
+                "12345678",
+                HTTPStatus.OK,
+                "ok",
+                "User successfully registered",
+            ),
+        ]
+    )
+    def test_insertion(
+        self, email, password, http_status, status, description
+    ):
+        data = {"email": email, "password": password}
+        response = Client().post(
+            "/api/register/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, http_status)
+        response_data = response.json()
+        self.assertEqual(response_data["status"], status)
+        self.assertEqual(response_data["description"], description)
 
 
 class UserTests(TestCase):

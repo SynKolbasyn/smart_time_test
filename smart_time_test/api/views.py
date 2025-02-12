@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from json import loads
 
 from pydantic import ValidationError
 from rest_framework.response import Response
@@ -11,16 +12,16 @@ from api.serializers import UserSerializer
 
 class RegisterView(APIView):
     def post(self, request):
-        request_data = request.json()
-
         try:
-            Register.model_validate(request_data)
+            Register.model_validate_json(request.body)
         except ValidationError:
             response = {
                 "status": "error",
                 "description": "Request data isn't valid",
             }
             return Response(data=response, status=HTTPStatus.BAD_REQUEST)
+
+        request_data = loads(request.body)
 
         if User.objects.filter(email=request_data["email"]).exists():
             response = {
@@ -31,8 +32,11 @@ class RegisterView(APIView):
 
         User.objects.create(**request_data)
 
-        response = {"status": "ok", "description": "User already registered"}
-        return Response(data=response, status=HTTPStatus.BAD_REQUEST)
+        response = {
+            "status": "ok",
+            "description": "User successfully registered",
+        }
+        return Response(data=response, status=HTTPStatus.OK)
 
 
 class UserView(APIView):
