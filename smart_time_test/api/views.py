@@ -72,7 +72,7 @@ class ExamsRegisterView(APIView):
                 return Response(data=response, status=HTTPStatus.NOT_FOUND)
 
             exam = Exam.objects.filter(
-                subject_id=subject.id, room_id=room.id
+                subject_id=subject, room_id=room
             ).first()
             if not exam:
                 response = {"status": "error", "description": "Exam not found"}
@@ -81,7 +81,7 @@ class ExamsRegisterView(APIView):
             exams.append(exam)
 
         for exam in exams:
-            ExamRegistration.objects.create(exam=exam.id, user=user.id)
+            ExamRegistration.objects.create(exam=exam, user=user)
 
         response = {
             "status": "ok",
