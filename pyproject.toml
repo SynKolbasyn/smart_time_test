@@ -1,0 +1,30 @@
+[project]
+name = "smart-time-test"
+version = "0.1.0"
+description = "Test task for SmartTIME project"
+authors = [
+    { name = "Andrew Kozmin", email = "syn.kolbasyn.06@gmail.com" }
+]
+requires-python = ">=3.13.1"
+dependencies = [
+    "django==5.2a1",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "flake8>=7.1.1",
+    "flake8-import-order>=0.18.2",
+    "flake8-pyproject>=1.2.3",
+    "flake8-quotes>=3.4.0",
+    "pep8-naming>=0.14.1",
+]
+
+[tool.flake8]
+exclude = ["venv", "__pycache__", ".git"]
+inline-quotes = "double"
+import-order-style = "google"
+
+[tool.black]
+line-length = 79
+target-version = ["py313"]
