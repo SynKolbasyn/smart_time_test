@@ -16,8 +16,8 @@ class Room(Model):
 
 
 class User(Model):
-    email = EmailField()
-    password = TextField()
+    email = EmailField(unique=True, blank=False, null=False)
+    password = TextField(blank=False, null=False)
 
     class Meta:
         db_table = "users"

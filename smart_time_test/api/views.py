@@ -5,29 +5,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.models import Exam, ExamRegistration, Room, Subject, User
-from api.request_models import ExamsRegister, Register
-from api.serializers import UserSerializer
+from api.request_models import ExamsRegister
+from api.serializers import RegisterSerializer
 
 
 class RegisterView(APIView):
     def post(self, request):
-        try:
-            Register.model_validate(request.data)
-        except ValidationError:
-            response = {
-                "status": "error",
-                "description": "Request data isn't valid",
-            }
-            return Response(data=response, status=HTTPStatus.BAD_REQUEST)
-
-        if User.objects.filter(email=request.data["email"]).exists():
-            response = {
-                "status": "error",
-                "description": "User already registered",
-            }
-            return Response(data=response, status=HTTPStatus.BAD_REQUEST)
-
-        User.objects.create(**request.data)
+        serializer = RegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
         response = {
             "status": "ok",
@@ -88,15 +74,3 @@ class ExamsRegisterView(APIView):
             "description": "User successfully registered to exams",
         }
         return Response(data=response, status=HTTPStatus.OK)
-
-
-class UserView(APIView):
-    def get(self, request, id):
-        user = User.objects.filter(id=id).first()
-
-        if not user:
-            response = {"description": "User not found"}
-            return Response(data=response, status=HTTPStatus.NOT_FOUND)
-
-        serializer = UserSerializer(instance=user)
-        return Response(data=serializer.data)
