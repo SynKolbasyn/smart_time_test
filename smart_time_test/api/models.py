@@ -29,3 +29,11 @@ class Exam(Model):
 
     class Meta:
         db_table = "exams"
+
+
+class ExamRegistration(Model):
+    exam = ForeignKey(Room, on_delete=CASCADE)
+    user = ForeignKey(User, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "exam_registrations"
