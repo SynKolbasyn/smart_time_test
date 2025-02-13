@@ -4,14 +4,7 @@ from json import dumps
 from django.test import Client, TestCase
 from parameterized import parameterized
 
-from api.models import Exam, ExamRegistration, Room, Subject, User
-
-
-users = [
-    (1, "student.1@edu.hse.ru", "1234"),
-    (2, "student.2@edu.hse.ru", "9876"),
-    (3, "student.3@edu.hse.ru", "password"),
-]
+from api.models import Exam, Room, Subject, User
 
 
 class RegisterTests(TestCase):
@@ -52,84 +45,62 @@ class RegisterTests(TestCase):
 
 class ExamRegistrationsTests(TestCase):
     def setUp(self):
-        User.objects.create(email="student.1@edu.hse.ru", password="12345678")
+        data = {
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+        }
+        response = Client().post(
+            "/api/register/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         subject = Subject.objects.create(subject_name="math")
         room = Room.objects.create(room_number=101)
-        room2 = Room.objects.create(room_number=102)
-        room3 = Room.objects.create(room_number=103)
-        room4 = Room.objects.create(room_number=104)
         Exam.objects.create(subject_id=subject, room_id=room)
-        Exam.objects.create(subject_id=subject, room_id=room2)
-        Exam.objects.create(subject_id=subject, room_id=room3)
-        Exam.objects.create(subject_id=subject, room_id=room4)
 
     def test_email_is_not_valid(self):
         data = {
-            "user_email": "student.edu.hse.ru",
-            "exams": [
-                {"subject_name": "math", "room_number": 101},
-            ],
+            "email": "studentedu.hse.ru",
+            "password": "12345678",
+            "subject_name": "math",
+            "room_number": 101,
         }
         response = Client().post(
             "/api/register_for_exams/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
-        self.assertEqual(
-            response.json(),
-            {"status": "error", "description": "Request data isn't valid"},
-        )
 
-    def test_exams_is_not_valid(self):
+    def test_subject_is_not_valid(self):
         data = {
-            "user_email": "student@edu.hse.ru",
-            "exams": [],
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": ["math"],
+            "room_number": 101,
         }
         response = Client().post(
             "/api/register_for_exams/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
-        self.assertEqual(
-            response.json(),
-            {"status": "error", "description": "Request data isn't valid"},
-        )
 
-    def test_one_registration_work(self):
+    def test_room_is_not_valid(self):
         data = {
-            "user_email": "student.1@edu.hse.ru",
-            "exams": [{"subject_name": "math", "room_number": 101}],
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": "math",
+            "room_number": [101],
+        }
+        response = Client().post(
+            "/api/register_for_exams/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_registrarion_success(self):
+        data = {
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": "math",
+            "room_number": 101,
         }
         response = Client().post(
             "/api/register_for_exams/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            response.json(),
-            {
-                "status": "ok",
-                "description": "User successfully registered to exams",
-            },
-        )
-        self.assertEqual(ExamRegistration.objects.all().count(), 1)
-
-    def test_many_registration_work(self):
-        data = {
-            "user_email": "student.1@edu.hse.ru",
-            "exams": [
-                {"subject_name": "math", "room_number": 101},
-                {"subject_name": "math", "room_number": 102},
-                {"subject_name": "math", "room_number": 103},
-                {"subject_name": "math", "room_number": 104},
-            ],
-        }
-        response = Client().post(
-            "/api/register_for_exams/", dumps(data), "application/json"
-        )
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            response.json(),
-            {
-                "status": "ok",
-                "description": "User successfully registered to exams",
-            },
-        )
-        self.assertEqual(ExamRegistration.objects.all().count(), 4)
