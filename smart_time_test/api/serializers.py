@@ -5,7 +5,9 @@ from rest_framework.serializers import (
     CharField,
     EmailField,
     IntegerField,
+    ModelSerializer,
     Serializer,
+    SlugRelatedField,
     ValidationError,
 )
 
@@ -126,3 +128,18 @@ class ExamUnregisterSerializer(Serializer):
             raise ValidationError({"status": "error", "description": message})
 
         return result
+
+
+class ExamSrializer(ModelSerializer):
+    room_number = SlugRelatedField(
+        slug_field="room_number", queryset=Room.objects.all(), source="room_id"
+    )
+    subject_name = SlugRelatedField(
+        slug_field="subject_name",
+        queryset=Subject.objects.all(),
+        source="subject_id",
+    )
+
+    class Meta:
+        model = Exam
+        fields = ("id", "subject_name", "room_number")

@@ -1,11 +1,13 @@
 from http import HTTPStatus
 
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.models import ExamRegistration
+from api.models import Exam, ExamRegistration
 from api.serializers import (
     ExamRegisterSerializer,
+    ExamSrializer,
     ExamUnregisterSerializer,
     RegisterSerializer,
 )
@@ -54,3 +56,8 @@ class ExamUnregisterView(APIView):
             "description": "User successfully unregistered for exam",
         }
         return Response(data=response, status=HTTPStatus.OK)
+
+
+class ExamsView(ListAPIView):
+    queryset = Exam.objects.all()
+    serializer_class = ExamSrializer
