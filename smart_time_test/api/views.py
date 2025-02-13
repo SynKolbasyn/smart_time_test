@@ -4,12 +4,13 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.models import Exam, ExamRegistration
+from api.models import Exam, ExamRegistration, User
 from api.serializers import (
     ExamRegisterSerializer,
     ExamSrializer,
     ExamUnregisterSerializer,
     RegisterSerializer,
+    UserSerializer,
 )
 
 
@@ -61,3 +62,17 @@ class ExamUnregisterView(APIView):
 class ExamsView(ListAPIView):
     queryset = Exam.objects.all()
     serializer_class = ExamSrializer
+
+
+class UserView(APIView):
+    def get(self, request, id):
+        serializer = UserSerializer(data={"id": id})
+        serializer.is_valid(raise_exception=True)
+
+        user = User.objects.filter(id=id).first()
+
+        exam_registrations = ExamRegistration.objects.filter(user=user)
+        data = {"user": user, "exams": [p.exam for p in exam_registrations]}
+        exams = UserSerializer(data)
+
+        return Response(data=exams.data)

@@ -5,6 +5,7 @@ from api.views import (
     ExamsView,
     ExamUnregisterView,
     RegisterView,
+    UserView,
 )
 
 
@@ -13,4 +14,5 @@ urlpatterns = [
     path("register_for_exam/", ExamRegisterView.as_view()),
     path("unregister_for_exam/", ExamUnregisterView.as_view()),
     path("exams/", ExamsView.as_view()),
+    path("users/<int:id>/", UserView.as_view()),
 ]

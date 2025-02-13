@@ -25,6 +25,7 @@ class RegisterSerializer(Serializer):
         password_hash = sha3_512(
             validated_data["password"].encode()
         ).hexdigest()
+
         try:
             return User.objects.create(email=email, password=password_hash)
         except IntegrityError:
@@ -143,3 +144,19 @@ class ExamSrializer(ModelSerializer):
     class Meta:
         model = Exam
         fields = ("id", "subject_name", "room_number")
+
+
+class UserSerializer(Serializer):
+    id = IntegerField(allow_null=False, required=True, write_only=True)
+    email = SlugRelatedField(slug_field="email", source="user", read_only=True)
+    exams = SlugRelatedField(slug_field="id", many=True, read_only=True)
+
+    def is_valid(self, *, raise_exception=False):
+        result = super().is_valid(raise_exception=raise_exception)
+
+        user = User.objects.filter(id=self.validated_data["id"]).first()
+        if not user:
+            message = "User not found"
+            raise ValidationError({"status": "error", "description": message})
+
+        return result
