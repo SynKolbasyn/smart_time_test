@@ -56,6 +56,9 @@ class ExamRegistrationsTests(TestCase):
         exam = Exam.objects.create(subject_id=subject, room_id=room)
         ExamRegistration.objects.create(user=user, exam=exam)
 
+        Room.objects.create(room_number=10)
+        Subject.objects.create(subject_name="rus")
+
         email = "student.1@edu.hse.ru"
         User.objects.create(
             email=email, password=sha3_512(password.encode()).hexdigest()
@@ -84,6 +87,9 @@ class ExamRegistrationsTests(TestCase):
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        message = "Email or password invalid"
+        expected = {"status": "error", "description": message}
+        self.assertDictEqual(response.json(), expected)
 
     def test_bad_password(self):
         data = {
@@ -108,6 +114,9 @@ class ExamRegistrationsTests(TestCase):
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        message = "Email or password invalid"
+        expected = {"status": "error", "description": message}
+        self.assertDictEqual(response.json(), expected)
 
     def test_wrong_subject(self):
         data = {
@@ -120,6 +129,9 @@ class ExamRegistrationsTests(TestCase):
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        message = "Subject not found"
+        expected = {"status": "error", "description": message}
+        self.assertDictEqual(response.json(), expected)
 
     def test_wrong_room(self):
         data = {
@@ -132,6 +144,25 @@ class ExamRegistrationsTests(TestCase):
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        message = "Room not found"
+        expected = {"status": "error", "description": message}
+        self.assertDictEqual(response.json(), expected)
+
+    def test_exam_does_not_exists(self):
+        data = {
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": "rus",
+            "room_number": 10,
+        }
+        response = Client().post(
+            "/api/register_for_exam/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        message = "Exam not found with "
+        f"subject {data['subject_name']} and room {data['room_number']}"
+        expected = {"status": "error", "description": message}
+        self.assertDictEqual(response.json(), expected)
 
     def test_user_already_registered_for_exam(self):
         data = {
@@ -144,6 +175,10 @@ class ExamRegistrationsTests(TestCase):
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        message = "User already registered for exam with "
+        f"subject {data['subject_name']} and room {data['room_number']}"
+        expected = {"status": "error", "description": message}
+        self.assertDictEqual(response.json(), expected)
 
     def test_exam_registration_success(self):
         data = {
@@ -156,6 +191,11 @@ class ExamRegistrationsTests(TestCase):
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
+        expected = {
+            "status": "ok",
+            "description": "User successfully registered for exam",
+        }
+        self.assertDictEqual(response.json(), expected)
 
 
 class ExamUnregistrationsTests(TestCase):
