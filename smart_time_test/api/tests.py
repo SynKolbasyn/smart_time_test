@@ -65,7 +65,7 @@ class ExamRegistrationsTests(TestCase):
             "room_number": 101,
         }
         response = Client().post(
-            "/api/register_for_exams/", dumps(data), "application/json"
+            "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
 
@@ -77,7 +77,7 @@ class ExamRegistrationsTests(TestCase):
             "room_number": 101,
         }
         response = Client().post(
-            "/api/register_for_exams/", dumps(data), "application/json"
+            "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
 
@@ -89,7 +89,7 @@ class ExamRegistrationsTests(TestCase):
             "room_number": [101],
         }
         response = Client().post(
-            "/api/register_for_exams/", dumps(data), "application/json"
+            "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
 
@@ -101,6 +101,43 @@ class ExamRegistrationsTests(TestCase):
             "room_number": 101,
         }
         response = Client().post(
-            "/api/register_for_exams/", dumps(data), "application/json"
+            "/api/register_for_exam/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+
+class ExamUnregistrationsTests(TestCase):
+    def setUp(self):
+        user = {
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+        }
+        data = {
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": "math",
+            "room_number": 101,
+        }
+        response = Client().post(
+            "/api/register/", dumps(user), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        subject = Subject.objects.create(subject_name="math")
+        room = Room.objects.create(room_number=101)
+        Exam.objects.create(subject_id=subject, room_id=room)
+        response = Client().post(
+            "/api/register_for_exam/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_unregister_success(self):
+        data = {
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": "math",
+            "room_number": 101,
+        }
+        response = Client().delete(
+            "/api/unregister_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
