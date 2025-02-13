@@ -4,7 +4,7 @@ from json import dumps
 
 from django.test import Client, TestCase
 
-from api.models import Exam, Room, Subject, User
+from api.models import Exam, ExamRegistration, Room, Subject, User
 
 
 class RegisterTests(TestCase):
@@ -46,60 +46,111 @@ class RegisterTests(TestCase):
 
 class ExamRegistrationsTests(TestCase):
     def setUp(self):
-        data = {
-            "email": "student@edu.hse.ru",
-            "password": "12345678",
-        }
-        response = Client().post(
-            "/api/register/", dumps(data), "application/json"
+        email = "student@edu.hse.ru"
+        password = "12345678"
+        user = User.objects.create(
+            email=email, password=sha3_512(password.encode()).hexdigest()
         )
-        self.assertEqual(response.status_code, HTTPStatus.OK)
+        room = Room.objects.create(room_number=1)
         subject = Subject.objects.create(subject_name="math")
-        room = Room.objects.create(room_number=101)
-        Exam.objects.create(subject_id=subject, room_id=room)
+        exam = Exam.objects.create(subject_id=subject, room_id=room)
+        ExamRegistration.objects.create(user=user, exam=exam)
 
-    def test_email_is_not_valid(self):
+        email = "student.1@edu.hse.ru"
+        User.objects.create(
+            email=email, password=sha3_512(password.encode()).hexdigest()
+        )
+
+    def test_bad_email(self):
         data = {
-            "email": "studentedu.hse.ru",
+            "email": "student.edu.hse.ru",
             "password": "12345678",
             "subject_name": "math",
-            "room_number": 101,
+            "room_number": 1,
         }
         response = Client().post(
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
 
-    def test_subject_is_not_valid(self):
+    def test_wrong_email(self):
         data = {
-            "email": "student@edu.hse.ru",
+            "email": "student.2@edu.hse.ru",
             "password": "12345678",
-            "subject_name": ["math"],
-            "room_number": 101,
+            "subject_name": "math",
+            "room_number": 1,
         }
         response = Client().post(
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
 
-    def test_room_is_not_valid(self):
+    def test_bad_password(self):
         data = {
             "email": "student@edu.hse.ru",
-            "password": "12345678",
+            "password": "1234",
             "subject_name": "math",
-            "room_number": [101],
+            "room_number": 1,
         }
         response = Client().post(
             "/api/register_for_exam/", dumps(data), "application/json"
         )
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
 
-    def test_registrarion_success(self):
+    def test_wrong_password(self):
+        data = {
+            "email": "student@edu.hse.ru",
+            "password": "123456789",
+            "subject_name": "math",
+            "room_number": 1,
+        }
+        response = Client().post(
+            "/api/register_for_exam/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_wrong_subject(self):
+        data = {
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": "hist",
+            "room_number": 1,
+        }
+        response = Client().post(
+            "/api/register_for_exam/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_wrong_room(self):
         data = {
             "email": "student@edu.hse.ru",
             "password": "12345678",
             "subject_name": "math",
-            "room_number": 101,
+            "room_number": 2,
+        }
+        response = Client().post(
+            "/api/register_for_exam/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_user_already_registered_for_exam(self):
+        data = {
+            "email": "student@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": "math",
+            "room_number": 1,
+        }
+        response = Client().post(
+            "/api/register_for_exam/", dumps(data), "application/json"
+        )
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_exam_registration_success(self):
+        data = {
+            "email": "student.1@edu.hse.ru",
+            "password": "12345678",
+            "subject_name": "math",
+            "room_number": 1,
         }
         response = Client().post(
             "/api/register_for_exam/", dumps(data), "application/json"
