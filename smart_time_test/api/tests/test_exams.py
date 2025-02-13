@@ -26,9 +26,7 @@ class ExamsTests(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         expected = []
         data = zip(
-            range(1, 6),
-            ExamsTests.room_numbers,
-            ExamsTests.subject_names
+            range(1, 6), ExamsTests.room_numbers, ExamsTests.subject_names
         )
         for id, room_number, subject_name in data:
             expected.append(
