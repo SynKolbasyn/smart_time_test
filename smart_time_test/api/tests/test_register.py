@@ -10,10 +10,8 @@ from api.models import User
 class RegisterTests(TestCase):
     def setUp(self):
         email = "student@edu.hse.ru"
-        password = "12345678"
-        User.objects.create(
-            email=email, password=sha3_512(password.encode()).hexdigest()
-        )
+        password = sha3_512(b"12345678").hexdigest()
+        User.objects.create(email=email, password=password)
 
     def test_bad_password(self):
         data = {"email": "student@edu.hse.ru", "password": "1234"}

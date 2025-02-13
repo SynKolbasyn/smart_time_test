@@ -10,10 +10,8 @@ from api.models import Exam, ExamRegistration, Room, Subject, User
 class ExamUnregistrationsTests(TestCase):
     def setUp(self):
         email = "student@edu.hse.ru"
-        password = "12345678"
-        user = User.objects.create(
-            email=email, password=sha3_512(password.encode()).hexdigest()
-        )
+        password = sha3_512(b"12345678").hexdigest()
+        user = User.objects.create(email=email, password=password)
         room = Room.objects.create(room_number=1)
         subject = Subject.objects.create(subject_name="math")
         exam = Exam.objects.create(subject_id=subject, room_id=room)
@@ -23,9 +21,7 @@ class ExamUnregistrationsTests(TestCase):
         Subject.objects.create(subject_name="rus")
 
         email = "student.1@edu.hse.ru"
-        user = User.objects.create(
-            email=email, password=sha3_512(password.encode()).hexdigest()
-        )
+        user = User.objects.create(email=email, password=password)
 
     def test_bad_email(self):
         data = {
