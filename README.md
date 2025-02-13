@@ -40,7 +40,7 @@
     * Don't forgot to set ```DJANGO_SECRET_KEY```, this is very important for production mode.
     * Select database name by setting the ```DJANGO_DB``` variable
 
-6. Run the server by using the following command (you may optionaly specify th e host and port, or just only port):
+6. Run the server by using the following command (you may optionaly specify the host and port, or just only port):
     ```bash
     uv run --no-dev smart_time_test/manage.py runserver <host:port>
     ```
