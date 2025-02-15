@@ -2,7 +2,12 @@
 
 ![Lint & test](https://github.com/SynKolbasyn/smart_time_test/actions/workflows/ci.yml/badge.svg)
 
-## Deploy guide
+## Tasks
+Solution for task 1 located at ```smart_time_test``` folder.
+
+Solution for task 2 located at ```task_2``` folder.
+
+### Deploy guide for task 1
 
 1. First of all you need OS such as [windows](https://microsoft.com/windows) or linux distribution (for example [ubuntu](https://ubuntu.com/)).
 2. Second step is install dependencies: [git](https://git-scm.com/) & [uv](https://github.com/astral-sh/uv)
@@ -45,14 +50,25 @@
     * Don't forgot to set ```DJANGO_SECRET_KEY```, this is very important for production mode.
     * Select database name by setting the ```DJANGO_DB``` variable
 
-6. Run the server by using the following command (you may optionaly specify the host and port, or just only port):
+6. Run migrations to create database:
+    ```bash
+    uv run --no-dev smart_time_test/manage.py migrate
+    ```
+
+7. (Optional) Create admin user to check databases via admin panel:
+    ```bash
+    uv run --no-dev smart_time_test/manage.py createsuperuser
+    ```
+    Complete the form that django provides to you. After th folowing step you will be able to sign in to admin panel.
+
+8. Run the server by using the following command (you may optionaly specify the host and port, or just only port):
     ```bash
     uv run --no-dev smart_time_test/manage.py runserver <host:port>
     ```
 
 ---
 
-## Testing
+### Testing
 * Linter:
     ```bash
     uv run flake8 --toml-config pyproject.toml --verbose smart_time_test
