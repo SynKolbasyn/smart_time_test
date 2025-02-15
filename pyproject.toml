@@ -27,7 +27,7 @@ dev = [
 exclude = [".venv", "__pycache__", ".git", "migrations"]
 inline-quotes = "double"
 import-order-style = "google"
-application-import-names = ["api"]
+application-import-names = ["api", "exam_organization"]
 
 [tool.black]
 line-length = 79
