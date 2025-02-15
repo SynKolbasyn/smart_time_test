@@ -7,6 +7,11 @@
 1. First of all you need OS such as [windows](https://microsoft.com/windows) or linux distribution (for example [ubuntu](https://ubuntu.com/)).
 2. Second step is install dependencies: [git](https://git-scm.com/) & [uv](https://github.com/astral-sh/uv)
 
+    Optrional, if you haven't got python, you may install it using ```uv```:
+    ```bash
+    uv python install
+    ```
+
 3. Clone this repo:
     ```bash
     git clone https://github.com/SynKolbasyn/smart_time_test.git
