@@ -1,0 +1,9 @@
+services:
+  server:
+    container_name: "smart_time_test"
+    hostname: "smart_time_test"
+    build:
+      dockerfile: "./Dockerfile"
+    ports:
+      - "8000:8000"
+    restart: "always"

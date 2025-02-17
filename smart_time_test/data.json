@@ -1,0 +1,227 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$WqntmOpsw1OinzmvoZKHNl$lcyKc5ukIoNONPK3x1r206Vp5g16sge/JMR3ej3nvBU=",
+        "last_login": "2025-02-17T04:52:39.527Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-02-17T04:52:03.763Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "api.room",
+    "pk": 1,
+    "fields": {
+        "room_number": 1
+    }
+},
+{
+    "model": "api.room",
+    "pk": 2,
+    "fields": {
+        "room_number": 2
+    }
+},
+{
+    "model": "api.room",
+    "pk": 3,
+    "fields": {
+        "room_number": 3
+    }
+},
+{
+    "model": "api.room",
+    "pk": 4,
+    "fields": {
+        "room_number": 4
+    }
+},
+{
+    "model": "api.room",
+    "pk": 5,
+    "fields": {
+        "room_number": 5
+    }
+},
+{
+    "model": "api.room",
+    "pk": 6,
+    "fields": {
+        "room_number": 6
+    }
+},
+{
+    "model": "api.user",
+    "pk": 1,
+    "fields": {
+        "email": "student.1@edu.hse.ru",
+        "password": "8a56bac869374c669443a1626ff0967af258123f83faf6b55e31dd541e6bbd90308a3385713294bf2e8861bc8cf8f8feda41f9c4db19d5811a6b5de85eac9870"
+    }
+},
+{
+    "model": "api.user",
+    "pk": 2,
+    "fields": {
+        "email": "student.2@edu.hse.ru",
+        "password": "8a56bac869374c669443a1626ff0967af258123f83faf6b55e31dd541e6bbd90308a3385713294bf2e8861bc8cf8f8feda41f9c4db19d5811a6b5de85eac9870"
+    }
+},
+{
+    "model": "api.user",
+    "pk": 3,
+    "fields": {
+        "email": "student.3@edu.hse.ru",
+        "password": "8a56bac869374c669443a1626ff0967af258123f83faf6b55e31dd541e6bbd90308a3385713294bf2e8861bc8cf8f8feda41f9c4db19d5811a6b5de85eac9870"
+    }
+},
+{
+    "model": "api.user",
+    "pk": 4,
+    "fields": {
+        "email": "student.4@edu.hse.ru",
+        "password": "8a56bac869374c669443a1626ff0967af258123f83faf6b55e31dd541e6bbd90308a3385713294bf2e8861bc8cf8f8feda41f9c4db19d5811a6b5de85eac9870"
+    }
+},
+{
+    "model": "api.user",
+    "pk": 5,
+    "fields": {
+        "email": "student.5@edu.hse.ru",
+        "password": "8a56bac869374c669443a1626ff0967af258123f83faf6b55e31dd541e6bbd90308a3385713294bf2e8861bc8cf8f8feda41f9c4db19d5811a6b5de85eac9870"
+    }
+},
+{
+    "model": "api.subject",
+    "pk": 1,
+    "fields": {
+        "subject_name": "math"
+    }
+},
+{
+    "model": "api.subject",
+    "pk": 2,
+    "fields": {
+        "subject_name": "hyst"
+    }
+},
+{
+    "model": "api.subject",
+    "pk": 3,
+    "fields": {
+        "subject_name": "rus"
+    }
+},
+{
+    "model": "api.exam",
+    "pk": 1,
+    "fields": {
+        "subject_id": 1,
+        "room_id": 1
+    }
+},
+{
+    "model": "api.exam",
+    "pk": 2,
+    "fields": {
+        "subject_id": 1,
+        "room_id": 3
+    }
+},
+{
+    "model": "api.exam",
+    "pk": 3,
+    "fields": {
+        "subject_id": 1,
+        "room_id": 5
+    }
+},
+{
+    "model": "api.exam",
+    "pk": 4,
+    "fields": {
+        "subject_id": 2,
+        "room_id": 2
+    }
+},
+{
+    "model": "api.exam",
+    "pk": 5,
+    "fields": {
+        "subject_id": 2,
+        "room_id": 6
+    }
+},
+{
+    "model": "api.exam",
+    "pk": 6,
+    "fields": {
+        "subject_id": 3,
+        "room_id": 4
+    }
+},
+{
+    "model": "api.examregistration",
+    "pk": 1,
+    "fields": {
+        "exam": 1,
+        "user": 1
+    }
+},
+{
+    "model": "api.examregistration",
+    "pk": 2,
+    "fields": {
+        "exam": 1,
+        "user": 2
+    }
+},
+{
+    "model": "api.examregistration",
+    "pk": 3,
+    "fields": {
+        "exam": 2,
+        "user": 3
+    }
+},
+{
+    "model": "api.examregistration",
+    "pk": 4,
+    "fields": {
+        "exam": 4,
+        "user": 4
+    }
+},
+{
+    "model": "api.examregistration",
+    "pk": 5,
+    "fields": {
+        "exam": 6,
+        "user": 5
+    }
+},
+{
+    "model": "api.examregistration",
+    "pk": 6,
+    "fields": {
+        "exam": 4,
+        "user": 5
+    }
+},
+{
+    "model": "api.examregistration",
+    "pk": 7,
+    "fields": {
+        "exam": 6,
+        "user": 3
+    }
+}
+]
