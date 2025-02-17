@@ -10,12 +10,7 @@ Solution for task 2 located at ```task_2``` folder.
 ### Deploy guide for task 1
 
 1. First of all you need OS such as [windows](https://microsoft.com/windows) or linux distribution (for example [ubuntu](https://ubuntu.com/)).
-2. Second step is install dependencies: [git](https://git-scm.com/) & [uv](https://github.com/astral-sh/uv)
-
-    Optrional, if you haven't got python, you may install it using ```uv```:
-    ```bash
-    uv python install
-    ```
+2. Second step is install dependencies: [docker](https://www.docker.com/)
 
 3. Clone this repo:
     ```bash
@@ -50,25 +45,19 @@ Solution for task 2 located at ```task_2``` folder.
     * Don't forgot to set ```DJANGO_SECRET_KEY```, this is very important for production mode.
     * Select database name by setting the ```DJANGO_DB``` variable
 
-6. Run migrations to create database:
+6. Run the server by using the following command:
     ```bash
-    uv run --no-dev smart_time_test/manage.py migrate
+    docker compose up --build
     ```
 
-7. (Optional) Create admin user to check databases via admin panel:
-    ```bash
-    uv run --no-dev smart_time_test/manage.py createsuperuser
-    ```
-    Complete the form that django provides to you. After th folowing step you will be able to sign in to admin panel.
-
-8. Run the server by using the following command (you may optionaly specify the host and port, or just only port):
-    ```bash
-    uv run --no-dev smart_time_test/manage.py runserver <host:port>
-    ```
+7. Passwords for all users are ```12345678```. Password for admin is ```admin```
 
 ---
 
 ### Testing
+
+You need [uv](https://github.com/astral-sh/uv) and python (```uv python install```)
+
 * Linter:
     ```bash
     uv run flake8 --toml-config pyproject.toml --verbose smart_time_test
